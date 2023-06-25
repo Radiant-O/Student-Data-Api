@@ -3,7 +3,6 @@ const { getStudents, getStudent, addStudent, deleteStudent, updateStudent, } = r
 const router = Router();
 
 router.get("/", getStudents).post("/", addStudent);
-router.get("/:id", getStudent).delete("/:id", deleteStudent);
-router.put(":/id", updateStudent);
-
+router.get("/:id", getStudent).delete("/:id", deleteStudent).put("/:id", updateStudent);
+ 
 module.exports = router;
