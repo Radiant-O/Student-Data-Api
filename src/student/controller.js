@@ -1,5 +1,12 @@
 const pool = require("../../db");
-const { getStuds, getStud, addStud, checkEmailExists, deleteStud, updateStud } = require("./queries");
+const {
+  getStuds,
+  getStud,
+  addStud,
+  checkEmailExists,
+  deleteStud,
+  updateStud,
+} = require("./queries");
 
 const getStudents = (req, res) => {
   pool.query(getStuds, (err, results) => {
@@ -17,60 +24,59 @@ const getStudent = (req, res) => {
 };
 
 const addStudent = (req, res) => {
-  const { name, email, age, dob } = req.body; 
+  const { name, email, age, dob } = req.body;
   // check if email exists
   pool.query(checkEmailExists, [email], (err, results) => {
-    if (results.rows.length){
-        res.send("Email Already Exist");
-        return;  
+    if (results.rows.length) {
+      res.send("Email Already Exist");
+      return;
     }
 
     pool.query(addStud, [name, email, age, dob], (err, results) => {
-        if (err) throw err;
-        res.status(201).send("Student Created Successfully")
-    })
+      if (err) throw err;
+      res.status(201).send("Student Created Successfully");
+    });
   });
 };
 
 const deleteStudent = (req, res) => {
-    const id = parseInt(req.params.id);
-    pool.query(getStud, [id], (err, results) =>{
-        const noStudent = !results.rows.length;
-        if(noStudent){
-            res.send("Student does not exist");
-            return;
-        }
-        pool.query(deleteStud, [id], (err, results) => {
-            if (err) throw err;
-            res.status(200).send("Student deleted Successfully"); 
-        })
-    })
-
+  const id = parseInt(req.params.id);
+  pool.query(getStud, [id], (err, results) => {
+    const noStudent = !results.rows.length;
+    if (noStudent) {
+      res.send("Student does not exist");
+      return;
+    }
+    pool.query(deleteStud, [id], (err, results) => {
+      if (err) throw err;
+      res.status(200).send("Student deleted Successfully");
+    });
+  });
 };
 
 const updateStudent = (req, res) => {
-    const id = parseInt(req.params.id);
-    const { name } = req.body;
+  const id = parseInt(req.params.id);
+  const { name } = req.body;
 
-    pool.query(getStud, [id], (err, results) => {
-        const noStudent = !results.rows.length;
+  pool.query(getStud, [id], (err, results) => {
+    const noStudent = !results.rows.length;
 
-        if(noStudent){
-            res.send("Student does not exist");
-            return;
-        }
+    if (noStudent) {
+      res.send("Student does not exist");
+      return;
+    }
 
-        pool.query(updateStud, [name, id], (err, results) => {
-            if (err) throw err;
-            res.status(200).send("Student Updated successfully");
-        });
+    pool.query(updateStud, [name, id], (err, results) => {
+      if (err) throw err;
+      res.status(200).send("Student Updated successfully");
     });
-}; 
+  });
+};
 
 module.exports = {
   getStudents,
   getStudent,
   addStudent,
   deleteStudent,
-  updateStudent
+  updateStudent,
 };
