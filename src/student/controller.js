@@ -1,4 +1,5 @@
 const pool = require("../../db");
+
 const {
   getStuds,
   getStud,
@@ -56,7 +57,7 @@ const deleteStudent = (req, res) => {
 
 const updateStudent = (req, res) => {
   const id = parseInt(req.params.id);
-  const { name } = req.body;
+  const { name, email } = req.body;
 
   pool.query(getStud, [id], (err, results) => {
     const noStudent = !results.rows.length;
@@ -66,7 +67,7 @@ const updateStudent = (req, res) => {
       return;
     }
 
-    pool.query(updateStud, [name, id], (err, results) => {
+    pool.query(updateStud, [name, email, id], (err, results) => {
       if (err) throw err;
       res.status(200).send("Student Updated successfully");
     });

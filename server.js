@@ -1,4 +1,5 @@
 const express = require("express");
+
 const studentRoutes = require("./src/student/routes");
 
 const app = express();
